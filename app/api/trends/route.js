@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-// English self-improvement / psychology / success niche (Get Better)
 const DEFAULT_QUERIES = [
   "dark psychology",
   "confidence",
@@ -18,11 +17,16 @@ const DEFAULT_QUERIES = [
   "influence people",
 ];
 
+// Filters to keep English content and drop Hindi / Hinglish
+const DEVANAGARI = /[ऀ-ॿ]/;
+const HINDI_HINT = /\b(hindi|kaise|kya|kyun|kyu|nahi|hai|aur|zindagi|safalta|paisa|wala|jeevan|mera|apni|karein|kare|hindime)\b/i;
+const HAS_LATIN = /[A-Za-z]/;
+
 function searchUrl(query, apiKey, publishedAfter, duration) {
   return (
     `https://www.googleapis.com/youtube/v3/search?part=snippet` +
     `&q=${encodeURIComponent(query)}` +
-    `&type=video&maxResults=20&order=viewCount&relevanceLanguage=en` +
+    `&type=video&maxResults=25&order=viewCount&relevanceLanguage=en&regionCode=US` +
     `&videoDuration=${duration}` +
     `&publishedAfter=${publishedAfter}&key=${apiKey}`
   );
@@ -104,11 +108,17 @@ export async function POST(req) {
           likes: st.likes || 0,
         };
       })
-      .filter((t) => !/#?shorts?\b/i.test(t.title))
+      .filter((t) => {
+        const text = `${t.title} ${t.channel}`;
+        if (/#?shorts?\b/i.test(t.title)) return false;
+        if (DEVANAGARI.test(text)) return false; // Hindi script
+        if (HINDI_HINT.test(text)) return false; // Hinglish
+        if (!HAS_LATIN.test(t.title)) return false; // keep English titles
+        return true;
+      })
       .sort((a, b) => b.views - a.views)
       .slice(0, 15);
 
-    // SEO / competition snapshot
     const views = trends.map((t) => t.views);
     const channelCount = {};
     trends.forEach((t) => (channelCount[t.channel] = (channelCount[t.channel] || 0) + 1));

@@ -41,6 +41,7 @@ Produce a complete content pack. Return ONLY a valid JSON object with these keys
 - tags: comma-separated YouTube tags, close to 700 characters (not over 700)
 - thumbnailPrompt: a precise English prompt for an AI image tool to create a cinematic, high-contrast red/black thumbnail, including composition, facial emotion, lighting and bold text overlay idea
 - timestamps: chapter timestamps for the description, each line "00:00 Chapter title", matching the script and length
+- youtubeDescription: an SEO-optimized YouTube video description (2-3 short paragraphs) that hooks the viewer, naturally includes target keywords, summarizes the value, then a call-to-action to subscribe, a line for links/socials placeholder, and 3-5 hashtags at the end
 - instagramCaption: an engaging Instagram caption with a few emojis and ~10 relevant hashtags
 - shortCaption: a punchy caption for a Short/Reel with 3-5 trending hashtags
 - seoStrategy: a concise but specific strategy block (string) covering: 5-8 target keywords/search phrases, the single best differentiation angle vs the competitor titles above, the ideal posting hook, and one reason this video can outperform the competition`;

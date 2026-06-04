@@ -2,17 +2,29 @@
 
 import { useState } from "react";
 
+function LogoMark() {
+  return (
+    <svg className="logo" viewBox="0 0 100 100" width="46" height="46" aria-label="Get Better logo">
+      <circle cx="50" cy="50" r="47" fill="#0a0a0a" stroke="#ff2b2b" strokeWidth="3" />
+      <g stroke="#fff" strokeWidth="2.1" fill="none" strokeLinecap="round">
+        <path d="M50 84 L50 44" />
+        <path d="M50 66 L40 54" /><path d="M40 54 L33 47" /><path d="M40 54 L42 45" />
+        <path d="M50 60 L61 49" /><path d="M61 49 L68 42" /><path d="M61 49 L59 41" />
+        <path d="M50 52 L43 41" /><path d="M50 52 L57 41" />
+        <path d="M43 41 L38 34" /><path d="M57 41 L62 34" />
+        <path d="M50 46 L50 36" /><path d="M50 40 L45 33" /><path d="M50 40 L55 33" />
+      </g>
+    </svg>
+  );
+}
+
 function CopyButton({ text, label }) {
   const [done, setDone] = useState(false);
   return (
     <button
       className={"copy-btn" + (done ? " done" : "")}
       onClick={async () => {
-        try {
-          await navigator.clipboard.writeText(text || "");
-          setDone(true);
-          setTimeout(() => setDone(false), 1500);
-        } catch (e) {}
+        try { await navigator.clipboard.writeText(text || ""); setDone(true); setTimeout(() => setDone(false), 1500); } catch (e) {}
       }}
     >
       {done ? "✓ Copied" : label || "Copy"}
@@ -32,9 +44,7 @@ function Card({ title, icon, text, className, children }) {
   );
 }
 
-function fmt(n) {
-  return Number(n || 0).toLocaleString("en-US");
-}
+function fmt(n) { return Number(n || 0).toLocaleString("en-US"); }
 
 export default function Home() {
   const [topic, setTopic] = useState("");
@@ -52,14 +62,12 @@ export default function Home() {
     setError(""); setLoadingTrends(true); setTrends([]); setStats(null);
     try {
       const res = await fetch("/api/trends", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: topic }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to fetch trends");
-      setTrends(data.trends || []);
-      setStats(data.stats || null);
+      setTrends(data.trends || []); setStats(data.stats || null);
     } catch (e) { setError(e.message); }
     finally { setLoadingTrends(false); }
   }
@@ -70,8 +78,7 @@ export default function Home() {
     setError(""); setResult(null); setLoadingGen(true);
     try {
       const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ topic: t, tone, length, model, trendTitles: trends.slice(0, 8).map((x) => x.title) }),
       });
       const raw = await res.text();
@@ -97,11 +104,12 @@ export default function Home() {
     const r = result;
     const txt = [
       "TITLES:\n" + (r.titles || []).join("\n"),
+      "SEO STRATEGY:\n" + (r.seoStrategy || ""),
       "SCRIPT:\n" + (r.script || ""),
+      "YOUTUBE DESCRIPTION:\n" + (r.youtubeDescription || ""),
       "TAGS:\n" + (r.tags || ""),
       "THUMBNAIL PROMPT:\n" + (r.thumbnailPrompt || ""),
       "TIMESTAMPS:\n" + (r.timestamps || ""),
-      "SEO STRATEGY:\n" + (r.seoStrategy || ""),
       "INSTAGRAM:\n" + (r.instagramCaption || ""),
       "SHORT:\n" + (r.shortCaption || ""),
     ].join("\n\n———\n\n");
@@ -114,7 +122,7 @@ export default function Home() {
     <div className="wrap">
       <div className="topbar">
         <div className="brand">
-          <div className="logo">GB</div>
+          <LogoMark />
           <div>
             <h1>Get Better — AI Content Studio</h1>
             <div className="sub">Trends → script → SEO, in one click</div>
@@ -221,6 +229,12 @@ export default function Home() {
           <Card title={`Script (~${length} min)`} icon="📝" text={result.script}>
             <div className="box">{result.script}</div>
           </Card>
+
+          {result.youtubeDescription && (
+            <Card title="YouTube Description" icon="📄" text={result.youtubeDescription}>
+              <div className="box">{result.youtubeDescription}</div>
+            </Card>
+          )}
 
           <Card title="Tags" icon="🏷️" text={result.tags}>
             <div className="box">{result.tags}</div>
