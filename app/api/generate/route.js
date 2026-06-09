@@ -35,6 +35,14 @@ This week's video topic: "${topic}"
 Tone/style: ${toneDesc}
 Target length: ~${length} minutes (script of about ${len.words} words).${trendsBlock}
 
+SCRIPT WRITING RULES (follow strictly):
+1. Open on a concrete scene plus an unresolved question. Never open on an abstract claim.
+2. Plant ONE specific, numbered open loop in the hook (e.g. "the 3rd mistake nearly ended it") and pay it off ONLY in the outro.
+3. End every section with a one-line forward tease into the next section.
+4. Never use these phrases: "in today's video", "let's begin", "let's bring it all together", "without further ado", "buckle up".
+5. Vary sentence length deliberately. Short, punchy lines next to longer flowing ones. Sentence fragments are allowed.
+6. The CTA must be a self-diagnosis question PLUS a specific cliffhanger for the next video. Never "let me know your thoughts".
+
 Produce a complete content pack. Return ONLY a valid JSON object with these keys:
 - titles: array of 5 high-CTR, curiosity-driven English titles (vary the angle; some bold/uppercase style)
 - script: full word-for-word script (~${len.words} words) with a 10-second pattern-interrupt hook, intro, clearly labeled sections [HOOK], [INTRO], [SECTION 1] etc. with vivid examples and stories, and a strong outro with a call-to-action and subscribe ask
